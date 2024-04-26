@@ -47,17 +47,6 @@ const Blog: React.FC = () => {
             key: 'categoryBlogName',
             dataIndex: "categoryBlogName"
         },
-        {
-            title: 'Thao tác',
-            key: 'action',
-            render: (_, record) => (
-                <Space size="middle">
-                    <a>View</a>
-                    <a>Update</a>
-                    <a>Delete</a>
-                </Space>
-            ),
-        },
     ];
 
 

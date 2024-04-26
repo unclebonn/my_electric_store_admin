@@ -63,7 +63,8 @@ const Chart: React.FC = () => {
     const imagelist = [
         "https://mekoong.com/wp-content/uploads/2022/10/4_mekoong-11.jpg",
         "https://thienkimhome.com/application/upload/products/bep-dien-tu-malloca-mh-03irb-new.jpg",
-        "https://bepeu.vn/wp-content/uploads/2022/04/anh1-tu-lanh-4-canh-Fagor.jpg"
+        "https://bepeu.vn/wp-content/uploads/2022/04/anh1-tu-lanh-4-canh-Fagor.jpg",
+        "https://mekoong.com/wp-content/uploads/2022/10/4_mekoong-11.jpg",
     ]
 
 
@@ -138,7 +139,7 @@ const Chart: React.FC = () => {
                     </Row>
                 </Col>
                 <Col span={8}>
-                    <h2>Năm</h2>
+                    <h2>Tháng</h2>
                     <Row style={{marginTop:50}}>
                         <Card >
                             <Statistic

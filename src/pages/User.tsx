@@ -34,7 +34,7 @@ const User: React.FC = () => {
         //     render: (text) => <a>{text}</a>,
         // },
         {
-            title: 'Tên sản phẩm',
+            title: 'Tên người dùng',
             dataIndex: 'name',
             key: 'name',
         },
@@ -73,7 +73,7 @@ const User: React.FC = () => {
             dataIndex: "gender"
         },
         {
-            title: 'Role',
+            title: 'Vai trò',
             key: 'roleId',
             dataIndex: "roleId",
             render: (value, record, index) => {
@@ -90,11 +90,11 @@ const User: React.FC = () => {
             },
         },
         {
-            title: 'Action',
+            title: 'Thao tác',
             key: 'action',
             render: (_, record) => (
                 <Space size="middle">
-                    <a>Update</a>
+                    <a>Cập nhật</a>
                 </Space>
             ),
         },

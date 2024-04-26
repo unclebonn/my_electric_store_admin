@@ -55,6 +55,18 @@ const Order: React.FC = () => {
             })
 
     }
+    const updateStatusCancel = (record: Order) => {
+        axios.put(`${ADMIN.UPDATESTATUSORDER}/${record.id}/3`)
+            .then((res) => {
+                if (res.status === 200) {
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Cập nhật thành công',
+                    });
+                }
+            })
+
+    }
 
     const columns: TableProps<Order>['columns'] = [
         // {
@@ -89,8 +101,23 @@ const Order: React.FC = () => {
         },
         {
             title: 'Hình thức thanh toán',
-            key: 'paymentName',
-            dataIndex: "paymentName"
+            dataIndex: "paymentName",
+            filters: [
+                {
+                    text: 'Tiền mặt',
+                    value: 'tienmat',
+                },
+                {
+                    text: 'QrCode',
+                    value: 'qrcode',
+                },
+                {
+                    text: 'VNPay',
+                    value: 'vnpay',
+                },
+            ],
+            onFilter: (value, record) => record.paymentName.startsWith(value as string),
+            filterSearch: true
         },
         {
             title: 'Trạng thái',
@@ -108,7 +135,23 @@ const Order: React.FC = () => {
                         return <Tag color="yellow">Đang xử lý</Tag>
                         return
                 }
-            }
+            },
+            filters: [
+                {
+                    text: 'Thành công',
+                    value: "1",
+                },
+                {
+                    text: 'Đang xử lí',
+                    value: "2",
+                },
+                {
+                    text: 'Đã huỷ',
+                    value: "3",
+                },
+            ],
+            onFilter: (value, record) => String(record.status).startsWith(value as string),
+            filterSearch: true
         },
         {
             title: 'Tổng giá trị đơn hàng',
@@ -122,24 +165,44 @@ const Order: React.FC = () => {
             render: (_, record) => (
                 <div style={{ textAlign: "center" }}>
                     {record.status == 2 ?
-                        <Button
-                            size="small"
-                            type="dashed"
-                            onClick={() => {
-                                Modal.confirm({
-                                    title: 'Xác nhận',
-                                    content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
-                                    footer: (_, { OkBtn, CancelBtn }) => (
-                                        <>
-                                            <CancelBtn />
-                                            <Button onClick={() => updateStatus(record)}>Cập nhật</Button>
-                                        </>
-                                    ),
-                                });
-                            }}
-                        >
-                            Cập nhật
-                        </Button>
+                        <>
+                            <Button
+                                style={{ backgroundColor: "red", color: "white" }}
+                                size="small"
+                                onClick={() => {
+                                    Modal.confirm({
+                                        title: 'Xác nhận',
+                                        content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
+                                        footer: (_, { OkBtn, CancelBtn }) => (
+                                            <>
+                                                <CancelBtn />
+                                                <Button onClick={() => updateStatusCancel(record)}>Huỷ đơn hàng</Button>
+                                            </>
+                                        ),
+                                    });
+                                }}
+                            >
+                                Huỷ đơn hàng
+                            </Button>
+                            <Button
+                                size="small"
+                                type="dashed"
+                                onClick={() => {
+                                    Modal.confirm({
+                                        title: 'Xác nhận',
+                                        content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
+                                        footer: (_, { OkBtn, CancelBtn }) => (
+                                            <>
+                                                <CancelBtn />
+                                                <Button onClick={() => updateStatus(record)}>Cập nhật</Button>
+                                            </>
+                                        ),
+                                    });
+                                }}
+                            >
+                                Cập nhật
+                            </Button>
+                        </>
                         : <></>
                     }
                     <Button type="primary" size="small" onClick={() => showModal(record.id)}>Xem chi tiết</Button>

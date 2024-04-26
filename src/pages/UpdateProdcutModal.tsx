@@ -52,7 +52,7 @@ const UpdateProductModal: React.FC = () => {
         data != null ?
             <div style={{ margin: 50 }}>
                 <Form onFinish={submit}>
-                    <Row>
+                    <Row style={{justifyContent:"center"}}>
                         <Image
                             src={data.imageUrl}
                             width={800}

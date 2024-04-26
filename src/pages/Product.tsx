@@ -113,7 +113,7 @@ const Product: React.FC = () => {
             render: (_, record) => (
                 <>
                     <Button size="small" onClick={() => toggleModal(record)} type="primary">Xem chi tiết</Button>
-                    <Button size="small" style={{ backgroundColor: "red", color: "white" }}>Xoá sản phẩm</Button>
+                    {/* <Button size="small" style={{ backgroundColor: "red", color: "white" }}>Xoá sản phẩm</Button> */}
                 </>
             ),
         },
