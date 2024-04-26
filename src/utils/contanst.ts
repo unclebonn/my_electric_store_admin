@@ -39,6 +39,7 @@ export const ADMIN = {
     DASHBOARD: {
         BESTSELLER: `${url}/Order/bestsellerbycategy`,
         TOTALPRICEBYTIME: `${url}/Order/Totalprice`,
+        FIVEWEEK: `${url}/Order/getfiveweek`,
     }
 
 

@@ -43,14 +43,14 @@ const Dashboard = () => {
                             <>
                                 <Col span={24}>
                                     <Button style={{ width: "90%" }}>
-                                        <Link to={"products"}>Products</Link>
+                                        <Link to={"products"}>Sản phẩm</Link>
                                     </Button>
                                 </Col>
                                 <Col span={24}>
-                                    <Button style={{ width: "90%" }}><Link to={"orders"}>Orders</Link></Button>
+                                    <Button style={{ width: "90%" }}><Link to={"orders"}>Đơn hàng</Link></Button>
                                 </Col>
                                 <Col span={24}>
-                                    <Button style={{ width: "90%" }}><Link to={"blogs"}>Blogs</Link></Button>
+                                    <Button style={{ width: "90%" }}><Link to={"blogs"}>Bài viết</Link></Button>
                                 </Col>
                             </>
 
@@ -63,18 +63,18 @@ const Dashboard = () => {
                                 </Col>
                                 <Col span={24}>
                                     <Button style={{ width: "90%" }}>
-                                        <Link to={"products"}>Products</Link>
+                                        <Link to={"products"}>Sản phẩm</Link>
                                     </Button>
                                 </Col>
                                 <Col span={24}>
-                                    <Button style={{ width: "90%" }}><Link to={"orders"}>Orders</Link></Button>
+                                    <Button style={{ width: "90%" }}><Link to={"orders"}>Đơn hàng</Link></Button>
 
                                 </Col>
                                 <Col span={24}>
-                                    <Button style={{ width: "90%" }}><Link to={"users"}>Users</Link></Button>
+                                    <Button style={{ width: "90%" }}><Link to={"users"}>Người dùng</Link></Button>
                                 </Col>
                                 <Col span={24}>
-                                    <Button style={{ width: "90%" }}><Link to={"blogs"}>Blogs</Link></Button>
+                                    <Button style={{ width: "90%" }}><Link to={"blogs"}>Bài viết</Link></Button>
                                 </Col>
                             </>
                     }

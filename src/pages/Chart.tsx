@@ -3,8 +3,8 @@ import { Card, Col, DatePicker, DatePickerProps, Image, Row, Statistic } from "a
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { ADMIN } from "utils/contanst"
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { Bar, Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, BarController, BarElement, LinearScale, CategoryScale } from "chart.js";
 
 
 interface totalPriceProps {
@@ -14,15 +14,19 @@ interface totalPriceProps {
 
 const Chart: React.FC = () => {
 
-    ChartJS.register(ArcElement, Tooltip, Legend);
 
     const [daily, setDaily] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
     const [weekly, setWeekly] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
     const [monthly, setMonthly] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
 
 
+    const [fiveweek, setFiveWeek] = useState([])
+
+
     const [bestSeller, setBestSeller] = useState([])
 
+    ChartJS.register(ArcElement, Tooltip, Legend);
+    ChartJS.register(BarController, BarElement, LinearScale, CategoryScale);
 
     const totalPriceByTime = async (type: number) => {
         axios.get(`${ADMIN.DASHBOARD.TOTALPRICEBYTIME}?type=${type}`)
@@ -55,21 +59,25 @@ const Chart: React.FC = () => {
             })
     }
 
+    const getfiveweek = () => {
+        axios.get(`${ADMIN.DASHBOARD.FIVEWEEK}`)
+            .then((res) => {
+                if (res.status === 200) {
+                    setFiveWeek(res.data.data)
+                }
+            })
+    }
+
 
     useEffect(() => {
         totalPriceByTime(1)
         // totalPriceByTime(2)
         totalPriceByTime(3)
         bestseller()
+        getfiveweek()
     }, [])
 
 
-    const imagelist = [
-        "https://mekoong.com/wp-content/uploads/2022/10/4_mekoong-11.jpg",
-        "https://thienkimhome.com/application/upload/products/bep-dien-tu-malloca-mh-03irb-new.jpg",
-        "https://bepeu.vn/wp-content/uploads/2022/04/anh1-tu-lanh-4-canh-Fagor.jpg",
-        "https://mekoong.com/wp-content/uploads/2022/10/4_mekoong-11.jpg",
-    ]
 
 
     const onChange: DatePickerProps['onChange'] = (date, dateString) => {
@@ -106,6 +114,37 @@ const Chart: React.FC = () => {
         };
 
         return <Pie data={data} options={options} />;
+    };
+
+    const BarChart = () => {
+
+        const label = fiveweek.map((statistic: any) => {
+            return `Tuần ${statistic.week}`
+        })
+        const value = fiveweek.map((statistic: any) => {
+            return statistic.totalInWeek
+        })
+
+        const data = {
+            labels: label,
+            datasets: [
+                {
+                    label: "Số lượng sản phẩm bán trong 5 tuần",
+                    data: value,
+                    backgroundColor: ["orange"],
+                },
+            ],
+        };
+
+        const options = {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        };
+
+        return <Bar height={300} width={400} data={data} options={options} />;
     };
 
     return (
@@ -203,11 +242,14 @@ const Chart: React.FC = () => {
 
             <Row style={{ margin: 70 }}>
                 <Col span={24}>
-                    <h2>Các loại bán chạy</h2>
+                    <h2>Các loại biểu đồ</h2>
                 </Col>
 
-                <div>
+                <div style={{ marginRight: 200 }}>
                     <PieChart />
+                </div>
+                <div>
+                    <BarChart />
                 </div>
             </Row>
         </>

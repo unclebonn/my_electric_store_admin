@@ -5,6 +5,7 @@ import { AUTH, INFORMATION } from "utils/contanst"
 import Cookies from "universal-cookie"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
+import { Helmet } from "react-helmet"
 
 const Login: React.FC = () => {
 
@@ -23,7 +24,7 @@ const Login: React.FC = () => {
             navigate("/dashboard/")
         } else if (cookie.get("information")?.roleId == 3) {
             navigate("/dashboard/products")
-        }else{
+        } else {
 
         }
     }, [])

@@ -185,6 +185,7 @@ const Order: React.FC = () => {
                                 Huỷ đơn hàng
                             </Button>
                             <Button
+                                style={{ backgroundColor: "lightgreen" }}
                                 size="small"
                                 type="dashed"
                                 onClick={() => {
@@ -200,7 +201,7 @@ const Order: React.FC = () => {
                                     });
                                 }}
                             >
-                                Cập nhật
+                                Duyệt
                             </Button>
                         </>
                         : <></>
