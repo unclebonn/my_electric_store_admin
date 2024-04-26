@@ -36,4 +36,10 @@ export const ADMIN = {
     GETALLCATEGORIES: `${url}/Category/getall`,
 
 
+    DASHBOARD: {
+        BESTSELLER: `${url}/Order/bestsellerbycategy`,
+        TOTALPRICEBYTIME: `${url}/Order/Totalprice`,
+    }
+
+
 }

@@ -19,8 +19,12 @@ const Login: React.FC = () => {
 
 
     useEffect(() => {
-        if (cookie.get("information") != null){
+        if (cookie.get("information")?.roleId == 1) {
+            navigate("/dashboard/")
+        } else if (cookie.get("information")?.roleId == 3) {
             navigate("/dashboard/products")
+        }else{
+
         }
     }, [])
     const onChangeFormLogin = (auth: { email: string, password: string }) => {
@@ -28,14 +32,19 @@ const Login: React.FC = () => {
             .then((res) => {
                 if (res.status === 200) {
                     const { tokenString, expiration } = res.data.data
-                    cookie.set("jwt-token", tokenString, { expires: new Date(expiration) })
+                    cookie.set("jwt-token", tokenString, { expires: new Date(expiration), path: "/" })
 
                     axios.get(`${INFORMATION}/${tokenString}`)
                         .then((res) => {
                             if (res.status === 200) {
                                 const information = res.data
-                                cookie.set("information", information, { expires: new Date(expiration) })
-                                navigate("dashboard/products")
+                                cookie.set("information", information, { expires: new Date(expiration), path: "/" })
+                                if (information.roleId === 3) {
+                                    navigate("/dashboard/products")
+                                } else {
+                                    navigate("/dashboard/")
+
+                                }
                             }
                         })
                 } else {

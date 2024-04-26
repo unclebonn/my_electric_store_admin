@@ -6,6 +6,9 @@ import Product from "./Product"
 import Cookies from "universal-cookie"
 import Blog from "./Blog"
 import UpdateProductModal from "./UpdateProdcutModal"
+import Chart from "./Chart"
+import { useEffect } from "react"
+import { toast } from "react-toastify"
 
 const Dashboard = () => {
 
@@ -13,11 +16,19 @@ const Dashboard = () => {
     const cookie = new Cookies()
 
     const logout = () => {
-        cookie.remove("information")
-        cookie.remove("jwt-token")
+        cookie.remove("information", { path: "/" })
+        cookie.remove("jwt-token", { path: "/" })
         navigate("/")
-
     }
+
+    useEffect(() => {
+        if (cookie.get("information") != null) {
+
+        } else {
+            navigate("/")
+            toast("Vui lòng đăng nhập trước khi vào")
+        }
+    }, [])
 
     return (
         <Row>
@@ -45,6 +56,11 @@ const Dashboard = () => {
 
                             :
                             <>
+                                <Col span={24}>
+                                    <Button style={{ width: "90%" }}>
+                                        <Link to={"/dashboard"}>Dashboard</Link>
+                                    </Button>
+                                </Col>
                                 <Col span={24}>
                                     <Button style={{ width: "90%" }}>
                                         <Link to={"products"}>Products</Link>
@@ -84,6 +100,7 @@ const Dashboard = () => {
 
                             :
                             <>
+                                <Route index element={<Chart />} />
                                 <Route path='/orders' element={<Order />} />
                                 <Route path='/products'>
                                     <Route index element={<Product />}></Route>
