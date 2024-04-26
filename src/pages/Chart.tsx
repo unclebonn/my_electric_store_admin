@@ -3,6 +3,8 @@ import { Card, Col, DatePicker, DatePickerProps, Image, Row, Statistic } from "a
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { ADMIN } from "utils/contanst"
+import { Pie } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 
 
 interface totalPriceProps {
@@ -11,6 +13,8 @@ interface totalPriceProps {
 }
 
 const Chart: React.FC = () => {
+
+    ChartJS.register(ArcElement, Tooltip, Legend);
 
     const [daily, setDaily] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
     const [weekly, setWeekly] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
@@ -77,6 +81,33 @@ const Chart: React.FC = () => {
             })
     };
 
+
+    const PieChart = () => {
+
+        const label = bestSeller.map((product: any) => {
+            return product.categoryName
+        })
+        const datasets = bestSeller.map((product: any) => {
+            return product.productBestSeller
+        })
+
+        const data = {
+            labels: label,
+            datasets: [
+                {
+                    data: datasets,
+                    backgroundColor: ['#E6F1D8', '#AFD788', '#5BBD2B', "#367517"],
+                },
+            ],
+        };
+
+        const options = {
+            // Cấu hình tùy chọn cho biểu đồ
+        };
+
+        return <Pie data={data} options={options} />;
+    };
+
     return (
 
 
@@ -84,7 +115,7 @@ const Chart: React.FC = () => {
             <Row style={{ margin: 60 }}>
                 <Col span={8}>
                     <h2>Hôm nay</h2>
-                    <Row style={{marginTop:50}}>
+                    <Row style={{ marginTop: 50 }}>
                         <Card>
                             <Statistic
                                 title="Đơn"
@@ -101,7 +132,7 @@ const Chart: React.FC = () => {
                             <Statistic
                                 title="Tổng tiền"
                                 value={daily.totalprice}
-                                
+
                                 valueStyle={{ color: '#3f8600' }}
                                 prefix={<ArrowUpOutlined />}
                                 suffix="đ"
@@ -117,7 +148,7 @@ const Chart: React.FC = () => {
                             <Statistic
                                 title="Đơn"
                                 value={weekly.totalOrder}
-                               
+
                                 valueStyle={{ color: '#3f8600' }}
                                 prefix={<ArrowUpOutlined />}
                                 suffix={<ShoppingCartOutlined />}
@@ -130,7 +161,7 @@ const Chart: React.FC = () => {
                             <Statistic
                                 title="Tổng tiền"
                                 value={weekly.totalprice}
-                               
+
                                 valueStyle={{ color: '#3f8600' }}
                                 prefix={<ArrowUpOutlined />}
                                 suffix="đ"
@@ -140,12 +171,12 @@ const Chart: React.FC = () => {
                 </Col>
                 <Col span={8}>
                     <h2>Tháng</h2>
-                    <Row style={{marginTop:50}}>
+                    <Row style={{ marginTop: 50 }}>
                         <Card >
                             <Statistic
                                 title="Đơn"
                                 value={monthly.totalOrder}
-                               
+
                                 valueStyle={{ color: '#3f8600' }}
                                 prefix={<ArrowUpOutlined />}
                                 suffix={<ShoppingCartOutlined />}
@@ -174,27 +205,10 @@ const Chart: React.FC = () => {
                 <Col span={24}>
                     <h2>Các loại bán chạy</h2>
                 </Col>
-                <Row gutter={[30, 30]}>
-                    {bestSeller.map((product: any, index: number) => {
-                        return (
-                            <Col span={8}>
-                                <Row>
-                                    <Image style={{ objectFit: "contain" }} src={imagelist[index]}></Image>
-                                </Row>
-                                <Row>
-                                    <h4>
-                                        {product.categoryName}
-                                    </h4>
 
-                                </Row>
-                                <Row>
-                                    Số lượng: {product.productBestSeller}
-                                </Row>
-                            </Col>
-                        )
-                    })}
-
-                </Row>
+                <div>
+                    <PieChart />
+                </div>
             </Row>
         </>
     )

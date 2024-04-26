@@ -7,22 +7,23 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom';
 import Cookies from 'universal-cookie';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import "./index.css"
 
 function App() {
 
   const cookie = new Cookies()
   return (
-  <>
-    <ToastContainer position="top-right" autoClose={1500} closeButton={true} limit={3} newestOnTop />
-    <BrowserRouter>
-      <Routes>
-        <Route index path='/' element={<Login />} />
-        <Route path='/dashboard*' element={<Dashboard />} />
-      </Routes>
+    <>
+      <ToastContainer position="top-right" autoClose={1500} closeButton={true} limit={3} newestOnTop />
+      <BrowserRouter>
+        <Routes>
+          <Route index path='/' element={<Login />} />
+          <Route path='/dashboard*' element={<Dashboard />} />
+        </Routes>
 
-      {/* <ToastContainer position="top-right" autoClose={1500} closeButton={true} limit={3} newestOnTop /> */}
-    </BrowserRouter>
-  </>
+        {/* <ToastContainer position="top-right" autoClose={1500} closeButton={true} limit={3} newestOnTop /> */}
+      </BrowserRouter>
+    </>
   );
 }
 
