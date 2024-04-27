@@ -46,13 +46,27 @@ const UpdateProductModal: React.FC = () => {
     }, [])
 
 
+    const validateNumber = (_: any, value: any, callback: any) => {
+        if (value > 0) {
+            callback(); // Giá trị hợp lệ
+        } else {
+            callback('Số phải lớn hơn 0!'); // Lỗi khi giá trị không hợp lệ
+        }
+    };
+    const validatePrice = (_: any, value: any, callback: any) => {
+        if (value > 50000) {
+            callback(); // Giá trị hợp lệ
+        } else {
+            callback('Giá phải lớn hơn 50.000!'); // Lỗi khi giá trị không hợp lệ
+        }
+    };
 
 
     return (
         data != null ?
             <div style={{ margin: 50 }}>
                 <Form onFinish={submit}>
-                    <Row style={{justifyContent:"center"}}>
+                    <Row style={{ justifyContent: "center" }}>
                         <Image
                             src={data.imageUrl}
                             width={800}
@@ -68,6 +82,7 @@ const UpdateProductModal: React.FC = () => {
                                 name="id"
                                 initialValue={data?.id}
 
+
                             >
                                 <Input disabled />
                             </Form.Item>
@@ -77,6 +92,9 @@ const UpdateProductModal: React.FC = () => {
                                 label="Tên sản phẩm"
                                 name="name"
                                 initialValue={data.name}
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập trường" }
+                                ]}
                             >
                                 <Input />
                             </Form.Item>
@@ -86,6 +104,9 @@ const UpdateProductModal: React.FC = () => {
                                 label="Miêu tả"
                                 name="description"
                                 initialValue={data.description}
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập trường" }
+                                ]}
                             >
                                 <Input.TextArea />
                             </Form.Item>
@@ -101,27 +122,40 @@ const UpdateProductModal: React.FC = () => {
                         </Col>
                         <Col span={24}>
                             <Form.Item
-                                label="price"
-                                name="price"
-                                initialValue={data.price}
-                            >
-                                <Input />
-                            </Form.Item>
-                        </Col>
-                        <Col span={24}>
-                            <Form.Item
-                                label="quantity"
+                                required
+                                label="Số lượng"
                                 name="quantity"
                                 initialValue={data.quantity}
+                                rules={[
+
+                                    { validator: validateNumber }
+                                ]}
                             >
-                                <Input />
+                                <Input type="number" />
                             </Form.Item>
                         </Col>
                         <Col span={24}>
                             <Form.Item
-                                label="warrantyPeriod"
+                                required
+                                label="Giá"
+                                name="price"
+                                initialValue={data.price}
+                                rules={[
+
+                                    { validator: validatePrice }
+                                ]}
+                            >
+                                <Input type="number" min={0} />
+                            </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Form.Item
+                                label="Thời gian bảo hành"
                                 name="warrantyPeriod"
                                 initialValue={data.warrantyPeriod}
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập trường" }
+                                ]}
                             >
                                 <Input />
                             </Form.Item>

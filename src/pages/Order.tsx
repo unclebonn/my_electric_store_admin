@@ -167,24 +167,6 @@ const Order: React.FC = () => {
                     {record.status == 2 ?
                         <>
                             <Button
-                                style={{ backgroundColor: "red", color: "white" }}
-                                size="small"
-                                onClick={() => {
-                                    Modal.confirm({
-                                        title: 'Xác nhận',
-                                        content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
-                                        footer: (_, { OkBtn, CancelBtn }) => (
-                                            <>
-                                                <CancelBtn />
-                                                <Button onClick={() => updateStatusCancel(record)}>Huỷ đơn hàng</Button>
-                                            </>
-                                        ),
-                                    });
-                                }}
-                            >
-                                Huỷ đơn hàng
-                            </Button>
-                            <Button
                                 style={{ backgroundColor: "lightgreen" }}
                                 size="small"
                                 type="dashed"
@@ -202,6 +184,24 @@ const Order: React.FC = () => {
                                 }}
                             >
                                 Duyệt
+                            </Button>
+                            <Button
+                                style={{ backgroundColor: "red", color: "white" }}
+                                size="small"
+                                onClick={() => {
+                                    Modal.confirm({
+                                        title: 'Xác nhận',
+                                        content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
+                                        footer: (_, { OkBtn, CancelBtn }) => (
+                                            <>
+                                                <CancelBtn />
+                                                <Button onClick={() => updateStatusCancel(record)}>Huỷ đơn hàng</Button>
+                                            </>
+                                        ),
+                                    });
+                                }}
+                            >
+                                Huỷ đơn hàng
                             </Button>
                         </>
                         : <></>

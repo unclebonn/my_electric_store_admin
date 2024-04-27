@@ -100,7 +100,7 @@ const Dashboard = () => {
 
                             :
                             <>
-                                <Route index element={<Chart />} />
+                                <Route path="/" element={<Chart />} />
                                 <Route path='/orders' element={<Order />} />
                                 <Route path='/products'>
                                     <Route index element={<Product />}></Route>

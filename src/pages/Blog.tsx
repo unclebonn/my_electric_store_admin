@@ -3,6 +3,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react"
 import { ADMIN } from "utils/contanst";
 import CreateBlogModal from "./CreateBlogs";
+import HTMLReactParser from "html-react-parser";
 
 
 interface Blog {
@@ -30,6 +31,9 @@ const Blog: React.FC = () => {
             title: 'Tiêu đề',
             dataIndex: 'title',
             key: 'title',
+            render: (value, record, index) => {
+                return HTMLReactParser(value)
+            },
         },
         {
             title: 'Ảnh bài viết',
@@ -63,7 +67,7 @@ const Blog: React.FC = () => {
     return (
         <>
             <Modal footer={<></>} title="Tạo bài viết" open={open} onCancel={() => setOpen(!open)}>
-                <CreateBlogModal setOpen={setOpen}/>
+                <CreateBlogModal setOpen={setOpen} />
             </Modal>
             <div style={{ margin: "0px 50px" }}>
                 <div style={{ textAlign: "right", margin: "10px 0px" }}>
