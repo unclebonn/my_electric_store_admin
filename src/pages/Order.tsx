@@ -47,6 +47,7 @@ const Order: React.FC = () => {
         axios.put(`${ADMIN.UPDATESTATUSORDER}/${record.id}/1`)
             .then((res) => {
                 if (res.status === 200) {
+                    getAllOrder()
                     messageApi.open({
                         type: 'success',
                         content: 'Cập nhật thành công',
@@ -59,6 +60,7 @@ const Order: React.FC = () => {
         axios.put(`${ADMIN.UPDATESTATUSORDER}/${record.id}/3`)
             .then((res) => {
                 if (res.status === 200) {
+                    getAllOrder()
                     messageApi.open({
                         type: 'success',
                         content: 'Cập nhật thành công',
@@ -175,10 +177,13 @@ const Order: React.FC = () => {
                                         title: 'Xác nhận',
                                         content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
                                         footer: (_, { OkBtn, CancelBtn }) => (
-                                            <>
+
+                                            <div style={{ display: "flex", justifyContent: "right" }}>
                                                 <CancelBtn />
-                                                <Button onClick={() => updateStatus(record)}>Cập nhật</Button>
-                                            </>
+                                                <div onClick={() => updateStatus(record)}>
+                                                    <OkBtn />
+                                                </div>
+                                            </div>
                                         ),
                                     });
                                 }}
@@ -193,10 +198,13 @@ const Order: React.FC = () => {
                                         title: 'Xác nhận',
                                         content: 'Vui lòng kiểm tra kỹ trước khi cập nhật trạng thái cho khách hàng',
                                         footer: (_, { OkBtn, CancelBtn }) => (
-                                            <>
+
+                                            <div style={{ display: "flex", justifyContent: "right" }}>
                                                 <CancelBtn />
-                                                <Button onClick={() => updateStatusCancel(record)}>Huỷ đơn hàng</Button>
-                                            </>
+                                                <div onClick={() => updateStatusCancel(record)}>
+                                                    <OkBtn />
+                                                </div>
+                                            </div>
                                         ),
                                     });
                                 }}
@@ -248,8 +256,7 @@ const Order: React.FC = () => {
 
     ];
 
-
-    useEffect(() => {
+    const getAllOrder = async () => {
         axios.get(ADMIN.GETALLORDER)
             .then((res) => {
                 if (res.status === 200) {
@@ -258,6 +265,11 @@ const Order: React.FC = () => {
                     setData(res.data.data.orders)
                 }
             })
+    }
+
+
+    useEffect(() => {
+        getAllOrder()
     }, [])
     const [isModalOpen, setIsModalOpen] = useState(false);
 

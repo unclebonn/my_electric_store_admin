@@ -31,7 +31,7 @@ interface ProductProps {
 
 const CreateProductModal: React.FC<any> = (props) => {
 
-    const {setOpen} = props
+    const { setOpen, setTotal, setData } = props
 
 
     const [volt, setVolt] = useState<string>("")
@@ -51,6 +51,16 @@ const CreateProductModal: React.FC<any> = (props) => {
             .then((res) => {
                 if (res.status === 200) {
                     setCategories(res.data.data)
+                }
+            })
+    }
+
+    const getAllProduct = async () => {
+        axios.get(ADMIN.GETALLPRODUCT)
+            .then((res) => {
+                if (res.status === 200) {
+                    setTotal(res.data.data.totalItems)
+                    setData(res.data.data.products)
                 }
             })
     }
@@ -99,6 +109,7 @@ const CreateProductModal: React.FC<any> = (props) => {
         await axios.post(`${ADMIN.CREATEPRODUCT}`, form)
             .then((res) => {
                 if (res.status === 201) {
+                    getAllProduct()
                     toast.success("Tạo sản phẩm thành công")
                 }
             })

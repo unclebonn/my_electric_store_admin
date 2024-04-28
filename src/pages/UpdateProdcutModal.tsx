@@ -1,4 +1,5 @@
-import { Button, Col, Form, Image, Input, Row } from "antd"
+import { MinusCircleOutlined } from "@ant-design/icons"
+import { Button, Col, Form, Image, Input, Row, Tag } from "antd"
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
@@ -12,6 +13,8 @@ const UpdateProductModal: React.FC = () => {
     const { id } = useParams()
 
     const [data, setData] = useState<any>(null)
+    const [detail, setDetail] = useState([])
+    const [images, setImages] = useState([])
 
 
     const getProductDetail = async () => {
@@ -19,6 +22,8 @@ const UpdateProductModal: React.FC = () => {
             .then((res) => {
                 if (res.status === 200) {
                     setData(res.data.data.products)
+                    setDetail(res.data.data.details)
+                    setImages(res.data.data.images)
                 }
             })
     }
@@ -35,8 +40,13 @@ const UpdateProductModal: React.FC = () => {
 
 
     const submit = (form: any) => {
+        const newData = {
+            ...form,
+            details: detail
+        }
+
         if (form != null) {
-            updateProductDetail(form)
+            updateProductDetail(newData)
         }
 
     }
@@ -61,10 +71,23 @@ const UpdateProductModal: React.FC = () => {
         }
     };
 
+    const deleteAttr = (attrName: string) => {
+        const filter = detail.filter((attr: any) => attr.name.toLocaleLowerCase() != attrName.toLocaleLowerCase())
+        setDetail(filter)
+    }
+
+    
+
+
+    const updateImageDetails = () => {
+        // sau khi lay duoc d
+    }
+
 
     return (
         data != null ?
             <div style={{ margin: 50 }}>
+                <h4 style={{ margin: 0, marginRight: 10 }}>Thông tin sản phẩm</h4>
                 <Form onFinish={submit}>
                     <Row style={{ justifyContent: "center" }}>
                         <Image
@@ -75,7 +98,7 @@ const UpdateProductModal: React.FC = () => {
 
                         />
                     </Row>
-                    <Row>
+                    <Row gutter={[20, 20]}>
                         <Col span={24}>
                             <Form.Item
                                 label="Id"
@@ -159,6 +182,35 @@ const UpdateProductModal: React.FC = () => {
                             >
                                 <Input />
                             </Form.Item>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <h4 style={{ margin: 0, marginRight: 10 }}>Các thuộc tính sản phẩm: </h4>
+                                {detail.map((detail: any) => {
+                                    return (
+                                        <Tag color="blue">{detail.name}: {detail.value}
+                                            <span onClick={() => deleteAttr(detail.name)} style={{ cursor: "pointer", marginLeft: 10, color: "red" }}><MinusCircleOutlined /> </span>
+
+                                        </Tag>
+                                    )
+                                })}
+                            </Row>
+
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <h4 style={{ margin: 0, marginRight: 10 }}>Các ảnh chi tiết sản phẩm: </h4>
+                                <Row gutter={[20, 20]}>
+                                    {images.map((image: any) => {
+                                        return (
+                                            <Col span={6}>
+                                                <Image src={image.url} style={{ objectFit: "contain" }} />
+                                            </Col>
+                                        )
+                                    })}
+
+                                </Row>
+                            </Row>
                         </Col>
                     </Row>
                     <Row>

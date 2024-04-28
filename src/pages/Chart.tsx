@@ -90,31 +90,31 @@ const Chart: React.FC = () => {
     };
 
 
-    const PieChart = () => {
+    // const PieChart = () => {
 
-        const label = bestSeller.map((product: any) => {
-            return product.categoryName
-        })
-        const datasets = bestSeller.map((product: any) => {
-            return product.productBestSeller
-        })
+    //     const label = bestSeller.map((product: any) => {
+    //         return product.categoryName
+    //     })
+    //     const datasets = bestSeller.map((product: any) => {
+    //         return product.productBestSeller
+    //     })
 
-        const data = {
-            labels: label,
-            datasets: [
-                {
-                    data: datasets,
-                    backgroundColor: ['#E6F1D8', '#AFD788', '#5BBD2B', "#367517"],
-                },
-            ],
-        };
+    //     const data = {
+    //         labels: label,
+    //         datasets: [
+    //             {
+    //                 data: datasets,
+    //                 backgroundColor: ['#E6F1D8', '#AFD788', '#5BBD2B', "#367517"],
+    //             },
+    //         ],
+    //     };
 
-        const options = {
-            // Cấu hình tùy chọn cho biểu đồ
-        };
+    //     const options = {
+    //         // Cấu hình tùy chọn cho biểu đồ
+    //     };
 
-        return <Pie data={data} options={options} />;
-    };
+    //     return <Pie data={data} options={options} />;
+    // };
 
     const BarChart = () => {
 
@@ -132,6 +132,36 @@ const Chart: React.FC = () => {
                     label: "Số lượng sản phẩm bán trong 5 tuần",
                     data: value,
                     backgroundColor: ["orange"],
+                },
+            ],
+        };
+
+        const options = {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                },
+            },
+        };
+
+        return <Bar height={300} width={400} data={data} options={options} />;
+    };
+    const BarChartTop4 = () => {
+
+        const label = bestSeller.map((statistic: any) => {
+            return `${statistic.categoryName}`
+        })
+        const value = bestSeller.map((statistic: any) => {
+            return statistic.productBestSeller
+        })
+
+        const data = {
+            labels: label,
+            datasets: [
+                {
+                    label: "Top 4 sản phẩm bán chạy",
+                    data: value,
+                    backgroundColor: ["green"],
                 },
             ],
         };
@@ -246,7 +276,7 @@ const Chart: React.FC = () => {
                 </Col>
 
                 <div style={{ marginRight: 200 }}>
-                    <PieChart />
+                    <BarChartTop4 />
                 </div>
                 <div>
                     <BarChart />
