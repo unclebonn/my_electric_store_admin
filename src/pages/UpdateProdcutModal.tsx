@@ -56,6 +56,9 @@ const UpdateProductModal: React.FC = () => {
                     getProductDetail()
                 }
             })
+            .catch((error) => {
+                toast.error("Lỗi cập nhật")
+            })
     }
 
 

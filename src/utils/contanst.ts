@@ -30,6 +30,7 @@ export const ADMIN = {
     GETBYUSERID: `${url}/Order/getorderdetailsbyorderid`,
 
     CREATEBLOG: `${url}/Blog`,
+    GETBLOGDETAIL: `${url}/Blog`,
     GETALLBLOG: `${url}/Blog/getAll`,
     GETALLCATEGORYBLOG: `${url}/Blog/getAllCategoryBlog`,
 

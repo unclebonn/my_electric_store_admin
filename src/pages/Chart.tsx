@@ -1,5 +1,5 @@
 import { ArrowUpOutlined, ShoppingCartOutlined } from "@ant-design/icons"
-import { Card, Col, DatePicker, DatePickerProps, Image, Row, Statistic } from "antd"
+import { Card, Col, DatePicker, DatePickerProps, Image, Row, Skeleton, Statistic } from "antd"
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { ADMIN } from "utils/contanst"
@@ -22,8 +22,11 @@ const Chart: React.FC = () => {
     const [bestSeller, setBestSeller] = useState([])
 
 
+    const [loading, setLoading] = useState(false)
 
- 
+
+
+
 
     //chart
     ChartJS.register(ArcElement, Tooltip, Legend);
@@ -61,9 +64,11 @@ const Chart: React.FC = () => {
     }
 
     const getfiveweek = () => {
+        setLoading(true)
         axios.get(`${ADMIN.DASHBOARD.FIVEWEEK}`)
             .then((res) => {
                 if (res.status === 200) {
+                    setLoading(false)
                     setFiveWeek(res.data.data)
                 }
             })
@@ -72,7 +77,7 @@ const Chart: React.FC = () => {
 
     useEffect(() => {
         totalPriceByTime(1)
-        // totalPriceByTime(2)
+        totalPriceByTime(2)
         totalPriceByTime(3)
         bestseller()
         getfiveweek()
@@ -137,15 +142,15 @@ const Chart: React.FC = () => {
             ],
         };
 
-        const options = {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                },
-            },
-        };
+        // const options = {
+        //     scales: {
+        //         y: {
+        //             beginAtZero: true,
+        //         },
+        //     },
+        // };
 
-        return <Bar height={300} width={400} data={data} options={options} />;
+        return <Bar height={300} width={400} data={data} />;
     };
     const BarChartTop4 = () => {
 
@@ -181,7 +186,7 @@ const Chart: React.FC = () => {
     return (
 
 
-        <>
+        <Skeleton style={{padding:80}} loading={loading}>
             <Row style={{ margin: 60 }}>
                 <Col span={8}>
                     <h2>Hôm nay</h2>
@@ -283,7 +288,7 @@ const Chart: React.FC = () => {
                     <BarChart />
                 </div>
             </Row>
-        </>
+        </Skeleton>
     )
 }
 

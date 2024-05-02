@@ -136,7 +136,7 @@ const Product: React.FC = () => {
 
     return (
         <>
-            <Modal footer={<></>} title="Thêm sản phẩm" open={open} onCancel={() => setOpen(!open)}>
+            <Modal width={800} footer={<></>} title="Thêm sản phẩm" open={open} onCancel={() => setOpen(!open)}>
                 <CreateProductModal setData={setData} setTotal={setTotal} setOpen={setOpen} />
             </Modal>
             <div style={{ margin: "0px 50px" }}>

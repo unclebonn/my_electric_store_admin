@@ -88,6 +88,22 @@ const User: React.FC = () => {
                         break;
                 }
             },
+            filters: [
+                {
+                    text: 'Admin',
+                    value: '1',
+                },
+                {
+                    text: 'Staff',
+                    value: '3',
+                },
+                {
+                    text: 'Customer',
+                    value: '2',
+                },
+            ],
+            onFilter: (value, record) => String(record.roleId).startsWith(value as string),
+            filterSearch: true
         },
         {
             title: 'Thao tác',
@@ -128,7 +144,7 @@ const User: React.FC = () => {
     return (
         <>
             <Modal footer={<></>} title="Tạo nhân viên" open={open} onCancel={() => setOpen(!open)}>
-                <CreateStaff setOpen={setOpen}/>
+                <CreateStaff setOpen={setOpen} />
             </Modal>
             <div style={{ margin: "0px 50px" }}>
                 <div style={{ textAlign: "right", margin: "10px 0px" }}>

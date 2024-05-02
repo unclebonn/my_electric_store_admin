@@ -1,4 +1,4 @@
-import { Button, Modal, Space, Table, TableProps } from "antd";
+import { Button, Image, Modal, Space, Table, TableProps } from "antd";
 import axios from "axios";
 import React, { useEffect, useState } from "react"
 import { ADMIN } from "utils/contanst";
@@ -19,7 +19,14 @@ const Blog: React.FC = () => {
 
 
     const [open, setOpen] = useState<boolean>(false)
+    const [openBlog, setOpenBlog] = useState<boolean>(false)
+
+    const [blogdetail, setBlogDetail] = useState<string>("")
     const [data, setData] = useState([])
+
+    const [loading, setLoading] = useState(false)
+
+
     const columns: TableProps<Blog>['columns'] = [
         // {
         //     title: 'id',
@@ -39,6 +46,11 @@ const Blog: React.FC = () => {
             title: 'Ảnh bài viết',
             key: 'imageUrl',
             dataIndex: 'imageUrl',
+            render: (value, record, index) => {
+                return (
+                    <Image src={value} width={200} height={200} style={{ objectFit: "contain" }} />
+                )
+            },
 
         },
         {
@@ -51,13 +63,40 @@ const Blog: React.FC = () => {
             key: 'categoryBlogName',
             dataIndex: "categoryBlogName"
         },
+        {
+            title: 'Thao tác',
+            key: 'action',
+            render: (value, record) => {
+                return (
+                    <div>
+                        <a onClick={() => {
+                            getBlogDetail(record.id)
+                            setOpenBlog(!openBlog)
+                        }
+                        }
+                        >Xem bài viết</a>
+                    </div>
+                )
+            }
+        },
     ];
 
 
+    const getBlogDetail = (blogid: number) => {
+        axios.get(`${ADMIN.GETBLOGDETAIL}/${blogid}`)
+            .then((res) => {
+                if (res.status === 200) {
+                    setBlogDetail(res.data.data.blog.content)
+                }
+            })
+    }
+
     useEffect(() => {
+        setLoading(true)
         axios.get(ADMIN.GETALLBLOG)
             .then((res) => {
                 if (res.status === 200) {
+                    setLoading(false)
                     setData(res.data.data.blogs)
                 }
             })
@@ -66,14 +105,20 @@ const Blog: React.FC = () => {
 
     return (
         <>
+            <Modal width={1000} footer={<></>} title="Bài viết" open={openBlog} onCancel={() => setOpenBlog(!openBlog)}>
+                <div>
+                    {HTMLReactParser(blogdetail)}
+                </div>
+            </Modal>
             <Modal footer={<></>} title="Tạo bài viết" open={open} onCancel={() => setOpen(!open)}>
                 <CreateBlogModal setOpen={setOpen} />
             </Modal>
+
             <div style={{ margin: "0px 50px" }}>
                 <div style={{ textAlign: "right", margin: "10px 0px" }}>
                     <Button onClick={() => setOpen(!open)} style={{ backgroundColor: "orange", color: "black" }} size="large">Tạo bài viết</Button>
                 </div>
-                <Table columns={columns} dataSource={data} />
+                <Table loading={loading} columns={columns} dataSource={data} />
             </div>
         </>
     )
