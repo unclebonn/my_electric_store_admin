@@ -104,6 +104,22 @@ const Order: React.FC = () => {
         {
             title: 'Hình thức thanh toán',
             dataIndex: "paymentName",
+            render: (value, record, index) => {
+                switch (value) {
+                    case "tienmat":
+                        return <Tag color="blue">Tiền mặt</Tag>
+
+                    case "qrcode":
+
+                        return <Tag color="blue">Qr code</Tag>
+
+                    case "vnpay":
+
+                        return <Tag color="blue">VN Pay</Tag>
+                    default:
+                        break;
+                }
+            },
             filters: [
                 {
                     text: 'Tiền mặt',

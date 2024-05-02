@@ -5,6 +5,10 @@ import React, { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import { toast } from "react-toastify"
 import { ADMIN } from "utils/contanst"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"
+import { ImageDB } from "utils/firebase"
+import { v4 } from "uuid"
+
 
 
 const UpdateProductModal: React.FC = () => {
@@ -13,8 +17,23 @@ const UpdateProductModal: React.FC = () => {
     const { id } = useParams()
 
     const [data, setData] = useState<any>(null)
-    const [detail, setDetail] = useState([])
-    const [images, setImages] = useState([])
+    const [detail, setDetail] = useState<any>([])
+    const [images, setImages] = useState<any>([])
+
+    //image main
+    const [imageMain, setImageMain] = useState<any>(null)
+    const [btnimageMain, setBtnImageMain] = useState<any>(null)
+
+
+    //attribute
+    const [name, setName] = useState("")
+    const [value, setValue] = useState("")
+
+    //firebase
+    const [listImage, setListImage] = useState([])
+    const [btnlistImage, setBtnListImage] = useState([])
+    const [imageUrlFirebase, setImageUrlFirebase] = useState<{ url: string }[]>([])
+    const [imagMaineUrlFirebase, setImageMainUrlFirebase] = useState<string>("")
 
 
     const getProductDetail = async () => {
@@ -24,6 +43,7 @@ const UpdateProductModal: React.FC = () => {
                     setData(res.data.data.products)
                     setDetail(res.data.data.details)
                     setImages(res.data.data.images)
+
                 }
             })
     }
@@ -39,14 +59,19 @@ const UpdateProductModal: React.FC = () => {
     }
 
 
-    const submit = (form: any) => {
+    const submit = async (form: any) => {
         const newData = {
             ...form,
-            details: detail
+            details: detail,
+            imageDTOs: [...images, ...imageUrlFirebase],
+            imageUrl: imagMaineUrlFirebase != "" ? imagMaineUrlFirebase : data.imageUrl
         }
+
+        console.log(newData);
 
         if (form != null) {
             updateProductDetail(newData)
+            setBtnListImage([])
         }
 
     }
@@ -76,12 +101,89 @@ const UpdateProductModal: React.FC = () => {
         setDetail(filter)
     }
 
-    
 
+    const addAttr = () => {
+        const newAttribute = {
+            // "id": 0,
+            "name": name,
+            "value": value
+        }
 
-    const updateImageDetails = () => {
-        // sau khi lay duoc d
+        setDetail(((detail: any) => [...detail, newAttribute]))
+        setName("")
+        setValue("")
+
     }
+
+    const removeImageExisted = (imageId: number) => {
+        const filterImage = images.filter((image: any) => image.id != imageId)
+        setImages(filterImage)
+    }
+
+
+    const removeImageExtra = (imageExtraId: number) => {
+        const filterImage = [...btnlistImage].filter((image, index) => index != imageExtraId)
+        setBtnListImage(filterImage)
+    }
+
+
+    const onChangeImage = (files: any) => {
+        if (files != null) {
+            setListImage(files)
+        }
+    }
+    const onChangeImageMain = (files: any) => {
+        if (files != null) {
+            setImageMain(files[0])
+        }
+    }
+
+
+
+    const onUploadFirebaseImageMain = async () => {
+        if (imageMain == null) {
+            toast.error("Vui lòng chọn ảnh để cập nhật")
+        } else {
+            setBtnImageMain(imageMain);
+            const imageRef = ref(ImageDB, `files/${v4()}`)
+            uploadBytes(imageRef, imageMain)
+                .then((res) => {
+                    getDownloadURL(res.ref).then((downloadUrl) => {
+                        setImageMainUrlFirebase(downloadUrl)
+                    })
+                })
+
+        }
+
+
+    }
+    const onUploadFirebaseImages = async () => {
+        if (listImage.length == 0) {
+            toast.error("Vui lòng chọn ảnh để cập nhật")
+        } else {
+            setBtnListImage(listImage);
+            [...listImage].map((image, index) => {
+                const imageRef = ref(ImageDB, `files/${v4()}`)
+                uploadBytes(imageRef, image)
+                    .then((res) => {
+                        getDownloadURL(res.ref).then((downloadUrl) => {
+                            setImageUrlFirebase(((imageUrlFirebase) => {
+
+                                return [...imageUrlFirebase, { url: downloadUrl }]
+
+                            }
+                            ))
+                        })
+                    })
+            })
+        }
+
+
+    }
+
+
+
+
 
 
     return (
@@ -91,7 +193,7 @@ const UpdateProductModal: React.FC = () => {
                 <Form onFinish={submit}>
                     <Row style={{ justifyContent: "center" }}>
                         <Image
-                            src={data.imageUrl}
+                            src={btnimageMain != null ? URL.createObjectURL(btnimageMain) : data.imageUrl}
                             width={800}
                             height={500}
                             style={{ objectFit: "contain" }}
@@ -137,10 +239,11 @@ const UpdateProductModal: React.FC = () => {
                         <Col span={24}>
                             <Form.Item
                                 label="Ảnh mới (nếu cần)"
-                                name="imageUrl"
-                                initialValue={data.imageUrl}
                             >
-                                <Input />
+                                <div style={{ display: "flex" }}>
+                                    <input type="file" onChange={(e) => onChangeImageMain(e.target.files)} />
+                                    <button type="button" onClick={() => onUploadFirebaseImageMain()}>Cập nhật ảnh mới</button>
+                                </div>
                             </Form.Item>
                         </Col>
                         <Col span={24}>
@@ -198,18 +301,83 @@ const UpdateProductModal: React.FC = () => {
 
                         </Col>
                         <Col span={24}>
-                            <Row>
-                                <h4 style={{ margin: 0, marginRight: 10 }}>Các ảnh chi tiết sản phẩm: </h4>
-                                <Row gutter={[20, 20]}>
-                                    {images.map((image: any) => {
-                                        return (
-                                            <Col span={6}>
-                                                <Image src={image.url} style={{ objectFit: "contain" }} />
-                                            </Col>
-                                        )
-                                    })}
+                            <Row gutter={[20, 20]}>
+                                <Col span={7}>
+                                    <Row>
+                                        <Col span={6}>
+                                            <div>Thuộc tính</div>
+                                        </Col>
+                                        <Col span={18}>
+                                            <Input name="name" value={name} onChange={(e) => setName(e.target.value)} />
 
-                                </Row>
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                <Col span={7}>
+                                    <Row>
+                                        <Col span={6}>
+                                            <div>Giá trị</div>
+                                        </Col>
+                                        <Col span={18}>
+                                            <Input name="value" value={value} onChange={(e) => setValue(e.target.value)} />
+                                        </Col>
+                                    </Row>
+                                </Col>
+                                <Col span={6}>
+                                    <Button onClick={addAttr}>Thêm thuộc tính</Button>
+                                </Col>
+                            </Row>
+                        </Col>
+                        <Col span={24}>
+                            <Row>
+                                <Col span={24}>
+                                    <div>
+                                        <h4 style={{ margin: 0, marginRight: 10 }}>Các ảnh chi tiết sản phẩm: </h4>
+                                        <h5>Ảnh hiện tại</h5>
+                                    </div>
+                                </Col>
+                                <Col span={24}>
+                                    <Row gutter={[20, 20]}>
+                                        {images.map((image: any) => {
+                                            return (
+                                                <Col span={6} style={{ textAlign: "center" }}>
+                                                    <Image width={200} height={200} src={image.url} style={{ objectFit: "contain" }} />
+                                                    <div onClick={() => removeImageExisted(image.id)}>
+                                                        <span style={{ cursor: "pointer", background: "red", color: "white", display: "inline-block", textAlign: "center", width: "100%" }}>Xoá ảnh</span>
+                                                    </div>
+                                                </Col>
+                                            )
+                                        })}
+
+                                    </Row>
+                                </Col>
+                            </Row>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col span={24}>
+                            <h5>Ảnh thêm ( nếu có )</h5>
+                        </Col>
+                        <Col span={24}>
+                            <Row gutter={[20, 20]}>
+                                {btnlistImage?.length > 0 ? [...btnlistImage].map((image: any, index) => {
+                                    return (
+                                        <Col span={6} style={{ textAlign: "center" }}>
+                                            <Image width={200} height={200} src={URL.createObjectURL(image)} style={{ objectFit: "contain" }} />
+                                            <div onClick={() => removeImageExtra(index)}>
+                                                <span style={{ cursor: "pointer", background: "red", color: "white", display: "inline-block", textAlign: "center", width: "100%" }}>Xoá ảnh</span>
+                                            </div>
+                                        </Col>
+                                    )
+                                })
+                                    : <></>
+                                }
+                            </Row>
+                        </Col>
+                        <Col span={24} style={{ marginTop: 20 }}>
+                            <Row>
+                                <input type="file" multiple onChange={(e) => onChangeImage(e.target.files)} />
+                                <button type="button" onClick={onUploadFirebaseImages}>Cập nhật hình ảnh</button>
                             </Row>
                         </Col>
                     </Row>

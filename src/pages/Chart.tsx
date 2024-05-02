@@ -18,13 +18,14 @@ const Chart: React.FC = () => {
     const [daily, setDaily] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
     const [weekly, setWeekly] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
     const [monthly, setMonthly] = useState<totalPriceProps>({ totalOrder: 0, totalprice: 0 })
-
-
     const [fiveweek, setFiveWeek] = useState([])
-
-
     const [bestSeller, setBestSeller] = useState([])
 
+
+
+ 
+
+    //chart
     ChartJS.register(ArcElement, Tooltip, Legend);
     ChartJS.register(BarController, BarElement, LinearScale, CategoryScale);
 
