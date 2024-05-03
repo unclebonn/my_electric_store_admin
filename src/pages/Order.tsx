@@ -5,7 +5,7 @@ import { ADMIN } from "utils/contanst"
 import { formatCurrencyVN } from "utils/formatCurrency"
 import { formatDate, getDateTodayVN } from "utils/formatDate"
 import dayjs, { Dayjs } from "dayjs"
-
+import utc from 'dayjs/plugin/utc'; // Import plugin UTC
 
 
 interface Order {
@@ -32,6 +32,8 @@ interface OrderDetail {
 }
 
 const Order: React.FC = () => {
+
+    dayjs.extend(utc); // Sử dụng plugin UTC
 
     const [isLoading, setIsLoading] = useState<boolean>(true)
     const [data, setData] = useState([])
@@ -82,7 +84,7 @@ const Order: React.FC = () => {
             dataIndex: 'orderDate',
             key: 'orderDate',
             render(value, record, index) {
-                return <span>{formatDate(value)}</span>
+                return <span> {dayjs(formatDate(value)).utcOffset('+07:00').add(7,'hours').format("DD/MM/YYYY HH:mm:ss")}</span>
             },
         },
         {
